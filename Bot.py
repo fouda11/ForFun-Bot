@@ -2,8 +2,6 @@ import discord
 from discord.ext import commands
 import discord.utils
 
-TOKEN = "MTAwMTE3NjU5OTA2NjA1MDYyMA.GX0AO5.quMFa5e-uM_M-nw5_QVRx8dQSPvC_buZGUl1PA"
-
 bot = commands.Bot(command_prefix="!")
 
 @bot.event
