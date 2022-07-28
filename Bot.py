@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-import discord.utils
+from discord.utils import get
 
 bot = commands.Bot(command_prefix="!")
 
