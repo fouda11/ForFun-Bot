@@ -3,7 +3,7 @@ from discord.ext import commands
 import discord.utils
 import asyncio
 
-TOKEN = "MTAwMTE3NjU5OTA2NjA1MDYyMA.GRmGPn.VIhnVGaZ_MiCdm3XltC5yh7BbERW09Vsu5efjA"
+TOKEN = ""
 
 bot = commands.Bot(command_prefix=".")
 
@@ -83,6 +83,26 @@ async def unban(ctx, user: discord.User):
     await ctx.guild.unban(user)
     await ctx.send("Unbanned " + user.mention)
 
+@commands.has_role('Admin')
+@bot.command(name="close")
+async def lock(ctx, channel : discord.TextChannel=None):
+    channel = channel or ctx.channel
+    role = discord.utils.get(ctx.guild.roles,name="ForFun")
+    overwrite = channel.overwrites_for(role)
+    overwrite.send_messages = False
+    await channel.set_permissions(role, overwrite=overwrite)
+    await ctx.send('Channel locked.')
+
+@commands.has_role('Admin')
+@bot.command(name="open")
+async def lock(ctx, channel : discord.TextChannel=None):
+    channel = channel or ctx.channel
+    role = discord.utils.get(ctx.guild.roles,name="ForFun")
+    overwrite = channel.overwrites_for(role)
+    overwrite.send_messages = True
+    await channel.set_permissions(role, overwrite=overwrite)
+    await ctx.send('Channel unlocked.')
+
 @bot.event
 async def on_raw_reaction_add(payload: discord.RawReactionActionEvent):
     myserver = bot.get_guild(733871808163348490)
@@ -90,5 +110,18 @@ async def on_raw_reaction_add(payload: discord.RawReactionActionEvent):
     if payload.channel_id == verify_channel.id:
         role = discord.utils.get(myserver.roles,name="ForFun")
         await payload.member.add_roles(role)
+
+@bot.command(name="color")
+async def color(ctx,arg = None):
+    myserver = bot.get_guild(733871808163348490)
+    if ctx.channel.id == 1001191707334934628:
+        if arg.isdigit():
+            for x in range(16):
+                role = discord.utils.get(myserver.roles,name=str(x))
+                if role in ctx.author.roles:
+                    await ctx.author.remove_roles(role)
+            if 0 < int(arg) < 16:
+                role = discord.utils.get(myserver.roles,name=arg)
+                await ctx.author.add_roles(role)
 
 bot.run(TOKEN)
