@@ -24,12 +24,41 @@ async def remove(ctx, member: discord.Member, role: discord.Role):
 
 @commands.has_role('Admin')
 @bot.command(name="mute")
-async def mute(ctx,member: discord.Member):
+async def mute(ctx,member: discord.Member, args = None):
     myserver = bot.get_guild(733871808163348490)
     role = discord.utils.get(myserver.roles,name="Muted")
     if role not in member.roles:
         await member.add_roles(role)
         await ctx.send("Muted " + member.mention)
+        if args:
+            days = 0
+            hours = 0
+            minutes = 0
+            tmp = 0
+            seconds = 0
+            total_seconds = 0
+            args = args.lower()
+            for arg in args:
+                if arg == 'd':
+                    days += tmp
+                    tmp = 0
+                elif arg == 'h':
+                    hours += tmp
+                    tmp = 0 
+                elif arg == 'm':
+                    minutes += tmp
+                    tmp = 0
+                elif arg == 's':
+                    seconds += tmp
+                    tmp = 0
+                elif arg.isdigit():
+                    tmp = tmp * 10
+                    tmp += int(arg)
+                    
+        total_seconds = (days * 3600 * 24) + (hours * 3600) + (minutes * 60) + seconds
+        await asyncio.sleep(total_seconds)
+        await member.remove_roles(role)
+
 
 @commands.has_role('Admin')
 @bot.command(name="unmute")
